@@ -4,25 +4,40 @@
 python manage.py fill_db
 ```
 
+```
+python manage.py csu
+```
+group fixtures -> users/fixtures/
+
 endpoints:
+
+```
+users/login/
+```
+```
+users/register/
+```
+```
+materials/
+```
 
 Фильтрация по курсу:
 ```
-/payments/?course=
+users/payments/?course=
 ```
 Фильтрация по уроку:
 ```
-/payments/?lesson=
+users/payments/?lesson=
 ```
 Фильтрация по способу оплаты (например, "cash"):
 ```
-/payments/?payment_method=cash
+users/payments/?payment_method=cash
 ```
 Сортировка по дате (по убыванию):
 ```
-/payments/?ordering=-payment_date
+users/payments/?ordering=-payment_date
 ```
 Сортировка по дате (по возрастанию):
 ```
-/payments/?ordering=payment_date
+users/payments/?ordering=payment_date
 ```

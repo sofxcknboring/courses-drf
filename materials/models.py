@@ -12,6 +12,15 @@ class Course(models.Model):
         verbose_name="Описание", help_text="Укажите описание курса"
     )
 
+    owner = models.ForeignKey(
+        "users.User",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name="Владелец",
+        help_text="Укажите владельца курса",
+    )
+
     class Meta:
         verbose_name = "Курс"
         verbose_name_plural = "Курсы"
@@ -31,6 +40,14 @@ class Lesson(models.Model):
         upload_to="lesson_previews/", verbose_name="Превью", blank=True, null=True
     )
     video_url = models.URLField(verbose_name="Ссылка на видео", blank=True, null=True)
+    owner = models.ForeignKey(
+        "users.User",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name="Владелец",
+        help_text="Укажите владельца урока",
+    )
 
     class Meta:
         verbose_name = "Урок"
