@@ -6,15 +6,20 @@ from rest_framework.generics import (
     UpdateAPIView,
 )
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
+from django.shortcuts import get_object_or_404
 
-from materials.models import Course, Lesson
+from materials.models import Course, Lesson, Subscription
 from materials.serializer import CourseSerializer, LessonSerializer
+from materials.paginators import CustomPagination
 from users.permissions import IsModer, IsOwner
 
 
 class CourseViewSet(ModelViewSet):
     serializer_class = CourseSerializer
+    pagination_class = CustomPagination
     queryset = Course.objects.all()
 
     def perform_create(self, serializer):
@@ -45,6 +50,7 @@ class LessonCreateApiView(CreateAPIView):
 class LessonListApiView(ListAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
+    pagination_class = CustomPagination
 
 
 class LessonRetrieveApiView(RetrieveAPIView):
@@ -62,3 +68,22 @@ class LessonDestroyApiView(DestroyAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
     permission_classes = (IsAuthenticated, IsOwner | ~IsModer)
+
+
+class SubscriptionAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        course_id = request.data.get("course_id")
+        course = get_object_or_404(Course, id=course_id)
+
+        subscription, created = Subscription.objects.get_or_create(user=user, course=course)
+
+        if not created:
+            subscription.delete()
+            message = "Подписка удалена"
+        else:
+            message = "Подписка добавлена"
+
+        return Response({"message": message})

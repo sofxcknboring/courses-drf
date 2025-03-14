@@ -41,3 +41,15 @@ users/payments/?ordering=-payment_date
 ```
 users/payments/?ordering=payment_date
 ```
+
+Подписка на курс
+method post
+```
+materials/subscribe/
+```
+
+```
+{
+    "course_id": "course id"
+}
+```
