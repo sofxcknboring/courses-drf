@@ -4,6 +4,7 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 from django.contrib.auth.hashers import make_password
 from materials.models import Lesson, Course
+from materials.models import Subscription
 from users.models import User
 
 class LessonAPITestCase(APITestCase):
@@ -24,6 +25,8 @@ class LessonAPITestCase(APITestCase):
 
         self.course = Course.objects.create(title="Тестовый курс", owner=self.user)
         self.lesson = Lesson.objects.create(title="Тестовый урок", course=self.course, owner=self.user)
+
+        self.subscription = Subscription.objects.create(user=self.user, course=self.course)
 
     def test_create_lesson(self):
         """Тест создания урока"""
@@ -67,5 +70,15 @@ class LessonAPITestCase(APITestCase):
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Lesson.objects.filter(id=self.lesson.id).exists(), False)
+
+    def test_unsubscribe_user_to_course(self):
+        """Тест отписки пользователя от курса"""
+        if self.user.is_authenticated:
+            url = reverse("materials:subscribe")
+            self.client.force_authenticate(user=self.user)
+            data = {"course_id": self.course.id}
+            response = self.client.post(url, data)
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertEqual(Subscription.objects.filter(user=self.user, course=self.course).exists(), False)
 
 
