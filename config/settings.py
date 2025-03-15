@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+STRIPE_API_KEY = os.getenv("STRIPE_API_KEY")
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
