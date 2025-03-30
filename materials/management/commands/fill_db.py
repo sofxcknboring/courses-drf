@@ -111,7 +111,7 @@ class Command(BaseCommand):
                 user=users[i % 5],
                 course=courses[i % 5],
                 amount=1999.99,
-                payment_method="transfer",
+                method="transfer",
             )
             for i in range(10)
         ] + [
@@ -119,7 +119,7 @@ class Command(BaseCommand):
                 user=users[i % 5],
                 lesson=lessons[i % 10],
                 amount=499.99,
-                payment_method="cash",
+                method="cash",
             )
             for i in range(10)
         ]
