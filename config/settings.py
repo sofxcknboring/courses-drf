@@ -2,6 +2,7 @@ import os
 from datetime import timedelta
 from pathlib import Path
 
+from celery.schedules import crontab
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -29,6 +30,7 @@ INSTALLED_APPS = [
     "materials",
     "django_filters",
     "drf_yasg",
+    "django_celery_beat",
 ]
 
 MIDDLEWARE = [
@@ -142,3 +144,13 @@ EMAIL_USE_SSL = True
 
 SERVER_EMAIL = EMAIL_HOST_USER
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+
+CELERY_BEAT_SCHEDULE = {
+    "check_inactive_users": {
+        "task": "users.tasks.check_inactive_users",
+        "schedule": crontab(
+            hour=0, minute=0
+        ),
+    },
+}
