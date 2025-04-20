@@ -1,4 +1,3 @@
-from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import ModelSerializer, URLField, SerializerMethodField
 
 from materials.models import Course, Lesson, Subscription
@@ -9,6 +8,7 @@ class LessonSerializer(ModelSerializer):
     video_url = URLField(
         required=False, allow_blank=True, validators=[youtube_url_validator]
     )
+
     class Meta:
         model = Lesson
         fields = "__all__"
@@ -30,4 +30,12 @@ class CourseSerializer(ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ("id", "title", "description", "preview", "lessons", "lesson_count", "is_subscribed")
+        fields = (
+            "id",
+            "title",
+            "description",
+            "preview",
+            "lessons",
+            "lesson_count",
+            "is_subscribed",
+        )

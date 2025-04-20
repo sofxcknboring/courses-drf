@@ -53,6 +53,7 @@ class LessonCreateApiView(CreateAPIView):
         lesson.owner = self.request.user
         lesson.save()
 
+
 class LessonListApiView(ListAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
@@ -70,6 +71,7 @@ class LessonUpdateApiView(UpdateAPIView):
     serializer_class = LessonSerializer
     permission_classes = (IsAuthenticated, IsModer | IsOwner)
 
+
 class LessonDestroyApiView(DestroyAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
@@ -84,7 +86,9 @@ class SubscriptionAPIView(APIView):
         course_id = request.data.get("course_id")
         course = get_object_or_404(Course, id=course_id)
 
-        subscription, created = Subscription.objects.get_or_create(user=user, course=course)
+        subscription, created = Subscription.objects.get_or_create(
+            user=user, course=course
+        )
 
         if not created:
             subscription.delete()

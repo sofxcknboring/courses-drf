@@ -7,6 +7,7 @@ from materials.models import Lesson, Course
 from materials.models import Subscription
 from users.models import User
 
+
 class LessonAPITestCase(APITestCase):
     def setUp(self):
         self.moder_group, created = Group.objects.get_or_create(name="moders")
@@ -24,15 +25,23 @@ class LessonAPITestCase(APITestCase):
         self.moderator.save()
 
         self.course = Course.objects.create(title="Тестовый курс", owner=self.user)
-        self.lesson = Lesson.objects.create(title="Тестовый урок", course=self.course, owner=self.user)
+        self.lesson = Lesson.objects.create(
+            title="Тестовый урок", course=self.course, owner=self.user
+        )
 
-        self.subscription = Subscription.objects.create(user=self.user, course=self.course)
+        self.subscription = Subscription.objects.create(
+            user=self.user, course=self.course
+        )
 
     def test_create_lesson(self):
         """Тест создания урока"""
         url = reverse("materials:lessons_create")
         self.client.force_authenticate(user=self.user)
-        data = {"title": "Новый урок", "course": self.course.id, "description": "Описание урока"}
+        data = {
+            "title": "Новый урок",
+            "course": self.course.id,
+            "description": "Описание урока",
+        }
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Lesson.objects.all().count(), 2)
@@ -41,7 +50,11 @@ class LessonAPITestCase(APITestCase):
         """Тест создания урока модератором"""
         url = reverse("materials:lessons_create")
         self.client.force_authenticate(user=self.moderator)
-        data = {"title": "Новый урок", "course": self.course.id, "description": "Описание урока"}
+        data = {
+            "title": "Новый урок",
+            "course": self.course.id,
+            "description": "Описание урока",
+        }
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
@@ -61,7 +74,9 @@ class LessonAPITestCase(APITestCase):
         data = {"title": "Обновленный урок"}
         response = self.client.patch(url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(Lesson.objects.get(pk=self.lesson.pk).title, "Обновленный урок")
+        self.assertEqual(
+            Lesson.objects.get(pk=self.lesson.pk).title, "Обновленный урок"
+        )
 
     def test_delete_lesson(self):
         """Тест удаления урока"""
@@ -79,6 +94,9 @@ class LessonAPITestCase(APITestCase):
             data = {"course_id": self.course.id}
             response = self.client.post(url, data)
             self.assertEqual(response.status_code, status.HTTP_200_OK)
-            self.assertEqual(Subscription.objects.filter(user=self.user, course=self.course).exists(), False)
-
-
+            self.assertEqual(
+                Subscription.objects.filter(
+                    user=self.user, course=self.course
+                ).exists(),
+                False,
+            )
