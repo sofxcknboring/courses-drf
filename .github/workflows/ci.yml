@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - latest
+      - dev
 
 jobs:
   lint:
