@@ -27,3 +27,12 @@ docker exec -it <имя_контейнера_db> psql -U <user> -d <db_name>
 docker-compose down -v
 docker-compose up --build
 ```
+
+
+Deploy:
+ - указать в secrets переменные:
+   - SERVER_IP
+   - SERVER_USER
+   - SSH_PRIVATE_KEY
+   - ENV_FILE
+ - Изменить порт ssh в workflow, если необходимо. по умолчанию 22.
