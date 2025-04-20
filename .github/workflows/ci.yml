@@ -88,5 +88,5 @@ jobs:
         port: 22
         script: |
           cd ${{ env.DEPLOY_PATH }}
-          docker-compose -f ${{ env.COMPOSE_FILE }} pull
-          docker-compose -f ${{ env.COMPOSE_FILE }} up --no-deps --build -d --remove-orphans
+          sudo docker-compose -f ${{ env.COMPOSE_FILE }} pull
+          sudo docker-compose -f ${{ env.COMPOSE_FILE }} up --no-deps --build -d --remove-orphans
