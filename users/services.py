@@ -16,11 +16,13 @@ def create_stripe_price(amount, product_id):
         product_data={"name": product_id},
     )
 
+
 def create_stripe_product(prd: Payment):
     """Создаем продукт в Stripe"""
     product = prd.course if prd.course else prd.lesson
     stripe_product = stripe.Product.create(name=product)
-    return stripe_product.get('id')
+    return stripe_product.get("id")
+
 
 def create_stripe_session(price):
     """

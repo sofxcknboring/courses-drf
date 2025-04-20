@@ -5,6 +5,7 @@ from celery import shared_task
 
 from materials.models import Course, Subscription
 
+
 @shared_task
 def send_course_update_email(course_id):
     course = Course.objects.get(id=course_id)

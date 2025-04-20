@@ -4,6 +4,7 @@ from django.db import models
 from config import settings
 from materials.models import Course, Lesson
 
+
 class User(AbstractUser):
     username = (None,)
 
@@ -59,10 +60,18 @@ class Payment(models.Model):
     )
     date = models.DateField(auto_now_add=True, verbose_name="Дата оплаты")
     course = models.ForeignKey(
-        Course, on_delete=models.CASCADE, verbose_name="Оплаченный курс", blank=True, null=True
+        Course,
+        on_delete=models.CASCADE,
+        verbose_name="Оплаченный курс",
+        blank=True,
+        null=True,
     )
     lesson = models.ForeignKey(
-        Lesson, on_delete=models.CASCADE, verbose_name="Оплаченный урок", blank=True, null=True
+        Lesson,
+        on_delete=models.CASCADE,
+        verbose_name="Оплаченный урок",
+        blank=True,
+        null=True,
     )
     amount = models.PositiveIntegerField(verbose_name="Сумма оплаты")
     method = models.CharField(
