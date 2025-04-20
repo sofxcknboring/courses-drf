@@ -1,6 +1,6 @@
 services:
   web:
-    container_name: "django-course"
+    container_name: django-course
     build: .
     command: >
       bash -c "python manage.py migrate && python manage.py csu && python manage.py runserver 0.0.0.0:8000"
@@ -11,10 +11,13 @@ services:
       - static_volume:/app/static
     ports:
       - "8000:8000"
-
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - app_network
 
   db:
     image: postgres
@@ -24,13 +27,25 @@ services:
       - POSTGRES_DB=${DB_NAME}
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
-    ports:
-      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app_network
 
   redis:
     image: redis:6
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app_network
 
   celery:
     build: .
@@ -38,18 +53,29 @@ services:
     env_file:
       - .env
     depends_on:
-      - redis
-      - db
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - app_network
 
   celery_beat:
     build: .
+    command: "bash -c 'celery -A config beat --loglevel=info'"
     env_file:
       - .env
-    command: "bash -c 'celery -A config beat --loglevel=info'"
     depends_on:
-      - redis
-      - db
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - app_network
 
 volumes:
   postgres_data:
   static_volume:
+
+networks:
+  app_network:
